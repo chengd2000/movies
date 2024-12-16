@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}{{ movie.title }}{% endblock %}
+{% block content %}
+<h1>{{ movie.title }}</h1>
+<img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }}">
+<p>{{ movie.overview }}</p>
+<p>Release Date: {{ movie.release_date }}</p>
+<p>Rating: {{ movie.vote_average }}</p>
+<h2>Cast</h2>
+<ul>
+    {% if movie.credits.cast %}
+        {% for cast in movie.credits.cast[:10] %}
+        <li>{{ cast.name }} as {{ cast.character }}</li>
+        {% endfor %}
+    {% else %}
+        <li>No cast information available.</li>
+    {% endif %}
+</ul> 
+{% endblock %}
+
