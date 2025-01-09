@@ -1,20 +1,107 @@
 {% extends "base.html" %}
 {% block title %}{{ movie.title }}{% endblock %}
 {% block content %}
-<h1>{{ movie.title }}</h1>
-<img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }}">
-<p>{{ movie.overview }}</p>
-<p>Release Date: {{ movie.release_date }}</p>
-<p>Rating: {{ movie.vote_average }}</p>
-<h2>Cast</h2>
-<ul>
-    {% if movie.credits.cast %}
-        {% for cast in movie.credits.cast[:10] %}
-        <li>{{ cast.name }} as {{ cast.character }}</li>
-        {% endfor %}
-    {% else %}
-        <li>No cast information available.</li>
-    {% endif %}
-</ul> 
+{% if movie.backdrop_path %}
+<div class="background" style="background-image: url('https://image.tmdb.org/t/p/w1280{{ movie.backdrop_path }}');">
+<div class="overlay">
+<div class="container content">
+{% else %}
+<div>
+<div>
+<div class="container">
+{% endif %}    
+
+    
+    <div class="container blog-post-meta py-3">
+        <div class="col-auto">
+            <div class="row align-items-center">
+                <div class="col"> 
+       
+                     {% if images.logos %}
+                    <img style="margin:10%" class="img-fluid rounded" src="https://image.tmdb.org/t/p/w300{{ images.logos[0].file_path }}" alt="{{ movie.title }}">
+                    
+                    {% else %}
+                        <h1 class="display-1">{{ movie.title }}</h1>
+                    {% endif %}    
+                    
+                    <img class="img-fluid rounded" src="https://image.tmdb.org/t/p/w780{{ movie.poster_path }}" alt="{{ movie.title }}">
+                    {% if trailer %}
+                    <h2>Trailer</h2>
+                    <iframe width="560" height="315" src="{{ trailer }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    {% else %}
+                        {% if images.logos %}
+                            <img style="margin:10%" class="img-fluid rounded" src="https://image.tmdb.org/t/p/w154{{ images.logos[0].file_path }}" alt="{{ movie.title }}">
+                            
+                            {% else %}
+                                <h1 class="display-1">{{ movie.title }}</h1>
+                        {% endif %} 
+                    {% endif %}
+                    <h2>Reviews</h2>
+                    <div class="accordion accordion-flush" id="accordionFlush">
+                        {% for review in reviews.results %}
+                        <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse" aria-expanded="false" aria-controls="flush-collapse">
+                                {{ review.author }}
+                            </button>
+                        </h2>
+                        <div id="flush-collapse" class="accordion-collapse collapse" data-bs-parent="#accordionFlush">
+                            <div class="accordion-body">{{ review.content }}</div>
+                        </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="col">
+                    <p class="fw-bolder">Release Date: {{ movie.release_date }}</p>
+                    <p class="fw-bolder">Rating: {{ movie.vote_average }} voted by {{ movie.vote_count }} people</p>
+
+                    <figure class="text">
+                        <blockquote class="blockquote">
+                            <p>{{ movie.overview }}</p>
+                        </blockquote>
+                      </figure>
+
+                    <h2>Genres</h2>
+                    <ul>
+                        {% for genre in movie.genres %}
+                        <li>{{ genre.name }}</li>
+                        {% endfor %}
+                    </ul>  
+                <h2>Cast</h2>
+                <ul>
+
+                    {% if credits.cast %}
+                        {% for cast_member in credits.cast[:30] %}
+                        <li>
+                            <img class="img-fluid rounded" src="https://image.tmdb.org/t/p/w45{{ cast_member.profile_path }}">
+
+                            {{ cast_member.name }} as {{ cast_member.character }}
+                        </li>
+
+                        {% endfor %}
+                    {% else %}
+                        <li>No cast information available.</li>
+                    {% endif %}
+                </ul>  
+                     
+            </div>
+            </div>
+        </div>
+       
+        
+                       
+    
+    </div>
+    </div>
+</div>
+</div>
+
+
+
+        
+
+
+
 {% endblock %}
 

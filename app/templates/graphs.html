@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+    <div class="row">
+        <div class="col">
+            <iframe class="three-frame-row" src="../static/popularity_histogram.html"  height="300px" frameborder="0">
+            </iframe>
+        </div>
+        <div class="col">
+            <iframe class="three-frame-row" src="../static/Vote_Average_histogram.html"  height="300px" frameborder="0">
+            </iframe>
+        </div>
+        <div class="col">
+            <iframe class="three-frame-row" src="../static/Vote_Count_histogram.html"  height="300px" frameborder="0">
+            </iframe>
+        </div>
+    </div> 
+    <div class="row">
+        <div class="col">
+            <iframe  class="three-frame-row" src="../static/popularity_boxplot.html"  height="300px" frameborder="0">
+            </iframe>
+        </div>
+        <div class="col">
+            <iframe class="three-frame-row" src="../static/Vote_Average_boxplot.html"  height="300px" frameborder="0">
+            </iframe>
+        </div>
+        <div class="col">
+            <iframe  class="three-frame-row" src="../static/Vote_Count_boxplot.html"  height="300px" frameborder="0">
+            </iframe>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <iframe class="three-frame-row" src="../static/Popularity_VS_Vote_Count_scatter.html"  height="300px" frameborder="0">
+            </iframe>
+        </div>
+        <div class="col">
+                <iframe class="three-frame-row"  src="../static/Popularity_VS_Vote_Average_scatter.html"  height="300px" frameborder="0">
+                </iframe>
+        </div>
+        <div class="col">
+            <iframe class="three-frame-row" src="../static/Vote_Count_VS_Vote_Average_scatter.html"  height="300px" frameborder="0">
+            </iframe>
+    </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <iframe class="three-frame-row" src="../static/Movies_By_Year.html"  height="300px" frameborder="0">
+            </iframe>
+        </div>
+        <div class="col">
+            <iframe class="three-frame-row" src="../static/Movies_By_Month.html"  height="300px" frameborder="0">
+            </iframe>
+        </div>
+        <div class="col">
+            <iframe class="three-frame-row" src="../static/Movies_Amount_By_Vote_Average.html"  height="300px" frameborder="0">
+            </iframe>
+    </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <iframe class="two-frame-row" src="../static/Movies_Amount_By_Genres.html"  height="300px" frameborder="0">
+            </iframe>
+        </div>
+        <div class="col">
+            <iframe class="two-frame-row" src="../static/Movies_Amount_By_Languages.html"  height="300px" frameborder="0">
+            </iframe>
+    </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <iframe  class="two-frame-row" src="../static/All_Columns_Matrix.html"  height="300px" frameborder="0">
+            </iframe>
+        </div>
+        <div class="col">
+            <iframe class="two-frame-row" src="../static/Correlation_Matrix.html"  height="300px" frameborder="0">
+            </iframe>
+        </div>
+    </div>
+{% endblock %}
+
+

@@ -1,32 +1,161 @@
+@import url('https://fonts.cdnfonts.com/css/hollywood-hills');
 body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
     background-color: #f4f4f4;
 }
-
+main {
+    background-color: gray;
+}
 nav {
-    background: #333;
-    color: #fff;
-    padding: 1em;
+   
+    background-size: cover;
     display: flex;
     justify-content: space-around;
+    height:120px;
+    background-image: url("../images/movie-clipper.png"); 
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    
+    
 }
 
-nav a {
-    color: #fff;
+nav p {
     text-decoration: none;
-    font-size: 1.2em;
+    font-size: 5em;
+    font-family: 'SF Hollywood Hills', sans-serif;
+    background-image: linear-gradient(yellow, white);
+    color: transparent;
+    background-clip: text;
+    -webkit-text-stroke: 2px black;
 }
+
 
 .movie-list {
     display: flex;
     flex-wrap: wrap;
     gap: 1em;
     padding: 1em;
+
+}
+.movie-item {
+    background: #fff;
+    padding: 1em;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    flex: 1 0 21%;
+    max-width: 21%;
 }
 
-.movie-item {
+.background { 
+    background-size: cover; 
+    background-position: center; 
+}
+.overlay { 
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)); 
+} 
+.content { 
+    z-index: 1; color: white; 
+    padding: 20px; 
+} 
+.accordion {
+    --bs-accordion-active-bg:yellowgreen;
+}
+.popup { 
+    display: none; 
+    position: fixed; 
+    left: 50%; 
+    top: 50%; 
+    transform: translate(-50%, -50%); 
+    border: 1px solid #ccc; 
+    padding: 20px; 
+    border-radius: 10px; /* Add shadow */ 
+    box-shadow: 0 4px 8px rgba(227, 175, 175, 0.2); 
+    /* Add padding (if you want space around your iframe content) */ 
+    background-color: #cfbbbb;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); 
+    z-index: 1000; 
+} 
+.overlay_popup { 
+    display: none; 
+    position: fixed; 
+    left: 0; top: 0; 
+    width: 100%; 
+    height: 100%; 
+    background-color: rgba(0, 0, 0, 0.5); 
+    z-index: 999; 
+}
+.range-container {
+    position: relative;
+    width: 200px;
+}
+
+#rangeInput {
+    width: 100%;
+}
+
+.ticks {
+    display: flex;
+    justify-content: space-between;
+    top: 30px;
+    width: 100%;
+}
+
+.ticks span {
+    font-size: 12px;
+    position: relative;
+}
+
+iframe { 
+     
+    /* Set width and height  
+    width: 100%;  Remove border */ 
+    border: none; /* Add border-radius for rounded corners */ 
+    border-radius: 10px; /* Add shadow */ 
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2); 
+    /* Add padding (if you want space around your iframe content) */ 
+    padding: 10px; /* Background color */ 
+    background-color: #f0f0f0; 
+}
+.three-frame-row {
+    height: 400px;
+    width: 400px;
+}
+.two-frame-row {
+    height: 600px;
+    width: 600px; 
+}
+.one-frame-row {
+    height: 555px;
+    width: 555px; 
+}
+.five-frame-row {
+    height: 555px;
+    width: 555px; 
+}
+#search-form {
+    border: none; /* Add border-radius for rounded corners */ 
+    border-radius: 10px; /* Add shadow */ 
+    box-shadow: 0 4px 8px rgba(227, 175, 175, 0.2); 
+    /* Add padding (if you want space around your iframe content) */ 
+    padding: 10px; /* Background color */ 
+    background-color: #cfbbbb;
+}
+.horizontal-scroll {
+    width: auto; /* Set the desired width */
+    height: auto; /* Set the desired height */
+    overflow-x: auto; /* Enable horizontal scrolling */
+    overflow-y: hidden; /* Disable vertical scrolling */
+    white-space: nowrap; /* Prevent wrapping of content */
+}
+.horizontal-scroll .card {
+    display: inline-block;
+    width: 300px; 
+    height: auto; 
+    background-color: rgb(216, 223, 225);
+    margin: 0 10px; 
+
     background: #fff;
     padding: 1em;
     border-radius: 5px;

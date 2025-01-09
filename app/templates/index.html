@@ -1,17 +1,406 @@
 {% extends "base.html" %}
+
 {% block title %}Home{% endblock %}
+
 {% block content %}
-<h1>Popular Movies</h1>
-<div class="movie-list">
-    {% for movie in movies %}
-    <div class="movie-item">
-        <h2>{{ movie.title }}</h2>
-        <p>Rating: {{ movie.vote_average }}</p>
-        <a href="{{ url_for('main.movie_details', movie_id=movie.id) }}">Details</a>
-    </div>
+<!-- טופס החיפוש -->
+<div class="d-flex" id="search-form">
+    <input class="form-control me-2" type="text" id="query" name="query" placeholder="Search for a movie..." autocomplete="off" >
+    <button class="btn btn-outline-success" id="search">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+        </svg>
+    </button>
+    <button class="btn btn-outline-success" id="openPopupBtn">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-funnel" viewBox="0 0 16 16">
+        <path d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5zm1 .5v1.308l4.372 4.858A.5.5 0 0 1 7 8.5v5.306l2-.666V8.5a.5.5 0 0 1 .128-.334L13.5 3.308V2z"/>
+      </svg>
+    </button>
+    <div class="overlay" id="overlay"></div>
+ <div class="popup" id="popup"> 
+    <button class="btn btn-outline-success" id="closePopupBtn">Save Filters And Close</button> 
+    <button class="btn btn-outline-success" id="clearValues">Clear Value</button> 
+    <br>
+    <label  class="form-label">Genres:</label>
+    {% for genre in genres.genres %}
+    <div class="form-check form-check-inline">
+        <input class="form-check-input" type="checkbox" id={{genre.name}} value="{{genre.name.replace(' ','_')}}">
+        <label class="form-check-label" for={{genre.name}}>{{ genre.name }}</label>
+      </div>
+
     {% endfor %}
+    
+<br>
+ 
+        <label>Movies release from:</label>
+        <input id="from_date" type="date" min="1900-01-01" max="2100-01-01" />
+       <br>
+        <label>Movies release until:</label>
+         <input id="until_date"  type="date" min="1900-01-01" max="2100-01-01"/>
+        <br>
+        <label for="range-container">Minimum Rating:</label>
+        <div class="range-container">
+            <input 
+                type="range" 
+                id="rangeInput" 
+                min="0" 
+                max="10" 
+                step="1"
+                oninput="updateValue(this.value)"
+            >
+    
+            <!-- הערכים לאורך הסרגל -->
+            <div class="ticks">
+                {% for i in range(11) %}
+                    <span>{{i}}</span>
+                {% endfor %}
+            </div>
+        </div>
+        <label  class="form-label">Start typing actors' names or choose from the most popular:</label>
+        <div class="row">
+            <div class="col">
+                <input
+                type="text"
+                id="actor1"
+                list="actor1list"
+                autocomplete="off"
+                class="form-select"
+                aria-label="Default select example"
+              />
+        <datalist id="actor1list"> 
+             <option value="" selected disabled>Actor 1</option>
+            {% for actor in top_actors %}
+            <option value="{{ actor.name }}">{{ actor.name }}</option>
+            {% endfor %}
+        </datalist>
+    </div> 
+    <div class="col">
+        <input
+                type="text"
+                id="actor2"
+                list="actor2list"
+                autocomplete="off"
+                class="form-select"
+                aria-label="Default select example"
+              />
+            <datalist id="actor2list"> 
+                <option value="" selected disabled>Actor 2</option>
+               {% for actor in top_actors %}
+               <option value="{{ actor.name }}">{{ actor.name }}</option>
+               {% endfor %}
+           </datalist>
+    </div>
+    </div>
 </div>
+</div>
+
+
+
+<h1>Trending Movies</h1>
+<div class="form-check form-switch">
+    <input class="form-check-input" type="checkbox" role="switch" id="trending_switch" onclick="switch_trending()" checked>
+  <label class="form-check-label" for="flexSwitchCheckDefault" id="trending_choice"></label>
+  </div>
+  <div id="trending_week_list">
+    <div class="horizontal-scroll" id="scrolling-div">
+        {% for movie in trending_movies_week %}
+        {% if movie %}
+            <div class="card">
+                <img class="card-img-top" src="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" alt="{{ movie.title }}">
+                <div class="card-body">
+                    <h5 class="card-title text-truncate"  style="text-decoration: underline; max-width: 100%;">{{ movie.title }}</h5>
+                    <p class="card-text">Rating: {{ movie.vote_average }}</p>
+                    <p class="card-text">Release Date: {{ movie.release_date }}</p>
+    
+                    <a class="btn btn-primary" href="{{ url_for('main.movie_details', movie_id=movie.id) }}">Details</a>
+                </div>
+            </div>
+        {% endif %}
+        {% endfor %}
+
+</div>   
+  </div>
+ <div id="trending_day_list">
+    <div class="horizontal-scroll" id="scrolling-div1">
+        {% for movie in trending_movies_day %}
+        {% if movie %}
+            <div class="card">
+                <img class="card-img-top" src="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" alt="{{ movie.title }}">
+                <div class="card-body">
+                    <h5 class="card-title text-truncate"  style="text-decoration: underline; max-width: 100%;">{{ movie.title }}</h5>
+                    <p class="card-text">Rating: {{ movie.vote_average }}</p>
+                    <p class="card-text">Release Date: {{ movie.release_date }}</p>
+    
+                    <a class="btn btn-primary" href="{{ url_for('main.movie_details', movie_id=movie.id) }}">Details</a>
+                </div>
+            </div>
+        {% endif %}
+        {% endfor %}
+
+</div>   
+</div>
+
+<h1>Popular Movies</h1>
+    <div class="horizontal-scroll" id="scrolling-div2">
+                    {% for movie in popular_movies %}
+                    {% if movie %}
+                    <div class="card">
+                        <img class="card-img-top" src="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" alt="{{ movie.title }}">
+                        <div class="card-body">
+                            <h5 class="card-title text-truncate"  style="text-decoration: underline; max-width: 100%;">{{ movie.title }}</h5>
+                            <p class="card-text">Rating: {{ movie.vote_average }}</p>
+                            <p class="card-text">Release Date: {{ movie.release_date }}</p>
+
+                            <a class="btn btn-primary" href="{{ url_for('main.movie_details', movie_id=movie.id) }}">Details</a>
+                        </div>
+                    </div>
+                {% endif %}
+                {% endfor %}
+
+    </div>             
+
+<h1>Upcoming Movies</h1>
+<div class="form-check-inline">
+    <input class="form-check-input" onchange="radio_country()" type="radio" name="flexRadioDefault" id="flexRadioIsrael" checked>
+    <label class="form-check-label" for="flexRadioIsrael">
+      Israel
+    </label>
+  </div>
+<div class="form-check-inline">
+    <input class="form-check-input" onchange="radio_country()" type="radio" name="flexRadioDefault" id="flexRadioUSA" >
+    <label class="form-check-label" for="flexRadioUSA">
+      USA
+    </label>
+  </div>
+  <div class="form-check-inline">
+    <input class="form-check-input" onchange="radio_country()" type="radio" name="flexRadioDefault" id="flexRadioItaly" >
+    <label class="form-check-label" for="flexRadioItaly">
+      Italy
+    </label>
+  </div>
+  <div class="form-check-inline">
+    <input class="form-check-input" onchange="radio_country()" type="radio" name="flexRadioDefault" id="flexRadioSpain" >
+    <label class="form-check-label" for="flexRadioSpain">
+      Spain
+    </label>
+  </div>
+
+  <div class="form-check-inline">
+    <input class="form-check-input" onchange="radio_country()" type="radio" name="flexRadioDefault" id="flexRadioRussia" >
+    <label class="form-check-label" for="flexRadioRussia">
+      Russia
+    </label>
+  </div>
+  <div class="form-check-inline">
+    <input class="form-check-input" onchange="radio_country()" type="radio" name="flexRadioDefault" id="flexRadioChina" >
+    <label class="form-check-label" for="flexRadioChina">
+      China
+    </label>
+  </div>
+  <div class="form-check-inline">
+    <input class="form-check-input" onchange="radio_country()" type="radio" name="flexRadioDefault" id="flexRadioIndia" >
+    <label class="form-check-label" for="flexRadioIndia">
+      India
+    </label>
+  </div>
+  <div class="form-check-inline">
+    <input class="form-check-input" onchange="radio_country()" type="radio" name="flexRadioDefault" id="flexRadioJapan" >
+    <label class="form-check-label" for="flexRadioJapan">
+      Japan
+    </label>
+  </div>
+  <div class="form-check-inline">
+    <input class="form-check-input" onchange="radio_country()" type="radio" name="flexRadioDefault" id="flexRadioAustralia">
+    <label class="form-check-label" for="flexRadioAustralia">
+      Australia
+    </label>
+  </div>
+<div id="IL">
+<div class="horizontal-scroll" id="scrolling-divIL">
+    {% for movie in upcoming_movies_israel %}
+    {% if movie %}
+    <div class="card">
+        <img class="card-img-top" src="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" alt="{{ movie.title }}">
+        <div class="card-body">
+            <h5 class="card-title text-truncate"  style="text-decoration: underline; max-width: 100%;">{{ movie.title }}</h5>
+            <p class="card-text">Rating: {{ movie.vote_average }}</p>
+            <p class="card-text">Release Date: {{ movie.release_date }}</p>
+
+            <a class="btn btn-primary" href="{{ url_for('main.movie_details', movie_id=movie.id) }}">Details</a>
+        </div>
+    </div>
+{% endif %}
+{% endfor %}
+</div>
+</div>
+
+<div id="US">
+<div class="horizontal-scroll" id="scrolling-divUS">
+    {% for movie in upcoming_movies_usa %}
+    {% if movie %}
+    <div class="card">
+        <img class="card-img-top" src="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" alt="{{ movie.title }}">
+        <div class="card-body">
+            <h5 class="card-title text-truncate"  style="text-decoration: underline; max-width: 100%;">{{ movie.title }}</h5>
+            <p class="card-text">Rating: {{ movie.vote_average }}</p>
+            <p class="card-text">Release Date: {{ movie.release_date }}</p>
+
+            <a class="btn btn-primary" href="{{ url_for('main.movie_details', movie_id=movie.id) }}">Details</a>
+        </div>
+    </div>
+{% endif %}
+{% endfor %}
+
+</div>
+</div>
+<div id="CN">
+<div class="horizontal-scroll" id="scrolling-divCN">
+    {% for movie in upcoming_movies_china %}
+    {% if movie %}
+    <div class="card">
+        <img class="card-img-top" src="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" alt="{{ movie.title }}">
+        <div class="card-body">
+            <h5 class="card-title text-truncate"  style="text-decoration: underline; max-width: 100%;">{{ movie.title }}</h5>
+            <p class="card-text">Rating: {{ movie.vote_average }}</p>
+            <p class="card-text">Release Date: {{ movie.release_date }}</p>
+
+            <a class="btn btn-primary" href="{{ url_for('main.movie_details', movie_id=movie.id) }}">Details</a>
+        </div>
+    </div>
+{% endif %}
+{% endfor %}
+
+</div>
+</div>
+<div id="SP">
+<div class="horizontal-scroll" id="scrolling-divSP">
+    {% for movie in upcoming_movies_spain %}
+    {% if movie %}
+    <div class="card">
+        <img class="card-img-top" src="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" alt="{{ movie.title }}">
+        <div class="card-body">
+            <h5 class="card-title text-truncate"  style="text-decoration: underline; max-width: 100%;">{{ movie.title }}</h5>
+            <p class="card-text">Rating: {{ movie.vote_average }}</p>
+            <p class="card-text">Release Date: {{ movie.release_date }}</p>
+
+            <a class="btn btn-primary" href="{{ url_for('main.movie_details', movie_id=movie.id) }}">Details</a>
+        </div>
+    </div>
+{% endif %}
+{% endfor %}
+
+</div>
+</div>
+<div id="IT">
+<div class="horizontal-scroll" id="scrolling-divIT">
+    {% for movie in upcoming_movies_italy %}
+    {% if movie %}
+    <div class="card">
+        <img class="card-img-top" src="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" alt="{{ movie.title }}">
+        <div class="card-body">
+            <h5 class="card-title text-truncate"  style="text-decoration: underline; max-width: 100%;">{{ movie.title }}</h5>
+            <p class="card-text">Rating: {{ movie.vote_average }}</p>
+            <p class="card-text">Release Date: {{ movie.release_date }}</p>
+
+            <a class="btn btn-primary" href="{{ url_for('main.movie_details', movie_id=movie.id) }}">Details</a>
+        </div>
+    </div>
+{% endif %}
+{% endfor %}
+
+</div>
+</div>
+<div id="JA">
+<div class="horizontal-scroll" id="scrolling-divJA">
+    {% for movie in upcoming_movies_japan %}
+    {% if movie %}
+    <div class="card">
+        <img class="card-img-top" src="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" alt="{{ movie.title }}">
+        <div class="card-body">
+            <h5 class="card-title text-truncate"  style="text-decoration: underline; max-width: 100%;">{{ movie.title }}</h5>
+            <p class="card-text">Rating: {{ movie.vote_average }}</p>
+            <p class="card-text">Release Date: {{ movie.release_date }}</p>
+
+            <a class="btn btn-primary" href="{{ url_for('main.movie_details', movie_id=movie.id) }}">Details</a>
+        </div>
+    </div>
+{% endif %}
+{% endfor %}
+
+</div>
+</div>
+<div id="IN">
+<div class="horizontal-scroll" id="scrolling-divIN">
+    {% for movie in upcoming_movies_india %}
+    {% if movie %}
+    <div class="card">
+        <img class="card-img-top" src="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" alt="{{ movie.title }}">
+        <div class="card-body">
+            <h5 class="card-title text-truncate"  style="text-decoration: underline; max-width: 100%;">{{ movie.title }}</h5>
+            <p class="card-text">Rating: {{ movie.vote_average }}</p>
+            <p class="card-text">Release Date: {{ movie.release_date }}</p>
+
+            <a class="btn btn-primary" href="{{ url_for('main.movie_details', movie_id=movie.id) }}">Details</a>
+        </div>
+    </div>
+{% endif %}
+{% endfor %}
+
+</div>
+</div>
+<div id="RU">
+<div class="horizontal-scroll" id="scrolling-divRU">
+    {% for movie in upcoming_movies_russia %}
+    {% if movie %}
+    <div class="card">
+        <img class="card-img-top" src="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" alt="{{ movie.title }}">
+        <div class="card-body">
+            <h5 class="card-title text-truncate"  style="text-decoration: underline; max-width: 100%;">{{ movie.title }}</h5>
+            <p class="card-text">Rating: {{ movie.vote_average }}</p>
+            <p class="card-text">Release Date: {{ movie.release_date }}</p>
+
+            <a class="btn btn-primary" href="{{ url_for('main.movie_details', movie_id=movie.id) }}">Details</a>
+        </div>
+    </div>
+{% endif %}
+{% endfor %}
+</div>
+</div>
+<div id="AU">
+<div class="horizontal-scroll" id="scrolling-divAU">
+    {% for movie in upcoming_movies_australia %}
+    {% if movie %}
+    <div class="card">
+        <img class="card-img-top" src="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" alt="{{ movie.title }}">
+        <div class="card-body">
+            <h5 class="card-title text-truncate"  style="text-decoration: underline; max-width: 100%;">{{ movie.title }}</h5>
+            <p class="card-text">Rating: {{ movie.vote_average }}</p>
+            <p class="card-text">Release Date: {{ movie.release_date }}</p>
+
+            <a class="btn btn-primary" href="{{ url_for('main.movie_details', movie_id=movie.id) }}">Details</a>
+        </div>
+    </div>
+{% endif %}
+{% endfor %}
+</div>
+</div>
+
+    <h1>Top Rated Movies</h1>
+    <div class="horizontal-scroll" id="scrolling-div4">
+                        {% for movie in top_rated_movies %}
+                        {% if movie %}
+                        <div class="card">
+                            <img class="card-img-top" src="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" alt="{{ movie.title }}">
+                            <div class="card-body">
+                                <h5 class="card-title text-truncate"  style="text-decoration: underline; max-width: 100%;">{{ movie.title }}</h5>
+                                <p class="card-text">Rating: {{ movie.vote_average }}</p>
+                                <p class="card-text">Release Date: {{ movie.release_date }}</p>
+    
+                                <a class="btn btn-primary" href="{{ url_for('main.movie_details', movie_id=movie.id) }}">Details</a>
+                            </div>
+                        </div>
+                    {% endif %}
+                    {% endfor %}
+    
+        </div>
 {% endblock %}
-
-
-

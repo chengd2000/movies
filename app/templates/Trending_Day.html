@@ -1,0 +1,18 @@
+{% extends "index.html" %}
+<div class="horizontal-scroll" id="scrolling-div">
+    {% for movie in trending_movies_day %}
+    {% if movie %}
+        <div class="card">
+            <img class="card-img-top" src="https://image.tmdb.org/t/p/w500/{{ movie.poster_path }}" alt="{{ movie.title }}">
+            <div class="card-body">
+                <h5 class="card-title text-truncate"  style="text-decoration: underline; max-width: 100%;">{{ movie.title }}</h5>
+                <p class="card-text">Rating: {{ movie.vote_average }}</p>
+                <p class="card-text">Release Date: {{ movie.release_date }}</p>
+
+                <a class="btn btn-primary" href="{{ url_for('main.movie_details', movie_id=movie.id) }}">Details</a>
+            </div>
+        </div>
+    {% endif %}
+    {% endfor %}
+
+</div>
